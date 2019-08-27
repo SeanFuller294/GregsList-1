@@ -6,7 +6,7 @@ let _jobApi = axios.create({
 })
 
 
-let _state = {
+let _steve = {
   jobs: []
 }
 
@@ -15,7 +15,7 @@ let _subscribers = {
 }
 
 function _setState(propName, data) {
-  _state[propName] = data
+  _steve[propName] = data
 
   _subscribers[propName].forEach(element => element())
 }
@@ -32,7 +32,7 @@ export default class JobService {
   }
 
   get Jobs() {
-    return _state.jobs.map(job => new Job(job))
+    return _steve.jobs.map(job => new Job(job))
   }
 
   getApiJobs() {
@@ -49,8 +49,8 @@ export default class JobService {
   addJob(data) {
     _jobApi.post('', data)
       .then(result => {
-        _state.jobs.push(result.data.data)
-        _setState('jobs', _state.jobs)
+        _steve.jobs.push(new Job(result.data.data))
+        _setState('jobs', _steve.jobs)
       })
       .catch(err => {
         console.error(err)
@@ -60,9 +60,9 @@ export default class JobService {
   deleteJob(id) {
     _jobApi.delete(id)
       .then(result => {
-        let index = _state.jobs.findIndex(job => job._id == id)
-        _state.jobs.splice(index, 1)
-        _setState('jobs', _state.jobs)
+        let index = _steve.jobs.findIndex(job => job._id == id)
+        _steve.jobs.splice(index, 1)
+        _setState('jobs', _steve.jobs)
       })
       .catch(err => {
         console.error(err)
